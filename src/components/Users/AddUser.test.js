@@ -1,33 +1,31 @@
+/* eslint-disable testing-library/no-node-access */
 import React from "react";
 import fs from "fs";
 import path from "path";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import AddUser from "./AddUser";
 
 describe("AddUser component", () => {
-  test("renders AddUser component correctly", () => {
+  test("imports the correct css file and uses the correct class", () => {
+    const { default: AddUser } = require("./AddUser");
+
     render(<AddUser />);
+
+    const cardElement = screen.getByText("Add User").closest(".card");
+    expect(cardElement).toHaveClass("card");
+    expect(cardElement).toHaveClass("input");
   });
 
-  test("form submission calls the addUserHandler", () => {
-    const addUserHandler = jest.fn();
-    render(<AddUser />);
-    const addButton = screen.getByText("Add User");
-    addButton.onclick = addUserHandler;
-
-    fireEvent.click(addButton);
-
-    expect(addUserHandler).toHaveBeenCalledTimes(1);
-  });
-
-  test("addUserHandler prevents the default behaviour", () => {
+  test("imports the Card component and encloses the form with it", () => {
     const filePath = path.join(__dirname, "AddUser.js");
     const fileContents = fs.readFileSync(filePath, "utf8");
 
-    const regex = /event\.preventDefault\(\)/;
+    const regex1 = /<\s*Card\b[^>]*>[\s\S]*?<\s*\/\s*Card\s*>/;
+    const regex2 = /<\s*\/\s*Card\s*>/;
+    const regex3 = /\bCard\b/;
 
-    expect(fileContents).toMatch(regex);
-    expect(fileContents).toContain("event.preventDefault()");
+    expect(fileContents).toMatch(regex1);
+    expect(fileContents).toMatch(regex2);
+    expect(fileContents).toMatch(regex3);
   });
 });
