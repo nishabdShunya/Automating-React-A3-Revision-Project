@@ -3,10 +3,10 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import UsersList from "./UsersList";
 
-test("UsersList component is rendered correctly", () => {
+test("new user is also rendered in the user list", () => {
   const users = [
-    { name: "John", age: 25 },
-    { name: "Alice", age: 30 },
+    { name: "John", age: 25, id: "1" },
+    { name: "Alice", age: 30, id: "2" },
   ];
 
   render(<UsersList users={users} />);
