@@ -1,11 +1,9 @@
-// Write your code at relevant places in the code below:
-
 import React, { useState } from "react";
 import Card from "../UI/Card";
 import Button from "../UI/Button";
 import "./AddUser.css";
 
-const AddUser = () => {
+const AddUser = (props) => {
   const [enteredUsername, setEnteredUsername] = useState("");
   const [enteredAge, setEnteredAge] = useState("");
 
@@ -17,7 +15,7 @@ const AddUser = () => {
     if (+enteredAge < 1) {
       return;
     }
-    console.log(enteredUsername, enteredAge);
+    props.onAddUser(enteredUsername, enteredAge);
     setEnteredUsername("");
     setEnteredAge("");
   };

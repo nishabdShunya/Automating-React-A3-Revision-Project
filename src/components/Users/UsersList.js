@@ -1,5 +1,3 @@
-// Write your code at relevant places in the code below:
-
 import React from "react";
 import Card from "../UI/Card";
 import "./UsersList.css";
@@ -10,8 +8,8 @@ const UsersList = (props) => {
       <ul>
         {props.users.map((user) => {
           return (
-            <li>
-              ${user.name} (${user.age} years old)
+            <li key={user.id}>
+              {user.name} ({user.age} years old)
             </li>
           );
         })}
