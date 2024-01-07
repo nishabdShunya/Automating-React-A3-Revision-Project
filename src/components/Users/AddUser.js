@@ -1,5 +1,3 @@
-// Write your code at relevant places in the code below:
-
 import React, { useState } from "react";
 import Card from "../UI/Card";
 import Button from "../UI/Button";
@@ -11,6 +9,12 @@ const AddUser = () => {
 
   const addUserHandler = (event) => {
     event.preventDefault();
+    if (enteredUsername.trim().length === 0 || enteredAge.trim().length === 0) {
+      return;
+    }
+    if (+enteredAge < 1) {
+      return;
+    }
     console.log(enteredUsername, enteredAge);
     setEnteredUsername("");
     setEnteredAge("");
