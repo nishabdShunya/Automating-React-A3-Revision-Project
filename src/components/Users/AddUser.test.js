@@ -1,22 +1,43 @@
 import React from "react";
-import { render, fireEvent, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import AddUser from "./AddUser";
 
-test("form submission passes the user data to App component", () => {
-  const submitHandler = jest.fn();
-  const onAddUserMock = jest.fn();
-  render(<AddUser onAddUser={onAddUserMock} />);
-  const addButton = screen.getByText("Add User");
-  addButton.onclick = submitHandler;
+describe("AddUser Component", () => {
+  test("displays error modal with desired title and message when submitting with empty fields", () => {
+    render(<AddUser />);
+    fireEvent.click(screen.getByText(/add user/i));
+    expect(screen.getByText(/invalid input/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/please enter a valid username and age/i)
+    ).toBeInTheDocument();
+  });
 
-  const usernameInput = screen.getByLabelText("Username");
-  const ageInput = screen.getByLabelText("Age");
+  test("displays error modal with desired title and message when entering invalid age", () => {
+    render(<AddUser />);
+    fireEvent.change(screen.getByLabelText(/username/i), {
+      target: { value: "Max" },
+    });
+    fireEvent.change(screen.getByLabelText(/age/i), {
+      target: { value: "0" },
+    });
+    fireEvent.click(screen.getByText(/add user/i));
+    expect(screen.getByText(/invalid input/i)).toBeInTheDocument();
+    expect(screen.getByText(/please enter a valid age/i)).toBeInTheDocument();
+  });
 
-  fireEvent.change(usernameInput, { target: { value: "Test Username" } });
-  fireEvent.change(ageInput, { target: { value: "20" } });
-  fireEvent.click(addButton);
+  test("submits user data and calls onAddUser prop when inputs are valid", () => {
+    const onAddUserMock = jest.fn();
+    render(<AddUser onAddUser={onAddUserMock} />);
 
-  expect(submitHandler).toHaveBeenCalledTimes(1);
-  expect(onAddUserMock).toHaveBeenCalledWith("Test Username", "20");
+    fireEvent.change(screen.getByLabelText(/username/i), {
+      target: { value: "John" },
+    });
+    fireEvent.change(screen.getByLabelText(/age/i), {
+      target: { value: "25" },
+    });
+    fireEvent.click(screen.getByText(/add user/i));
+
+    expect(onAddUserMock).toHaveBeenCalledWith("John", "25");
+  });
 });
